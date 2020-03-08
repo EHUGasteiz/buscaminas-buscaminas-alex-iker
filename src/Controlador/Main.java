@@ -6,6 +6,8 @@ import Vista.VentanaBuscaminas;
 public class Main {
 	private static VentanaBuscaminas vb;
 	public static int[] minas;
+	public static int ancho;
+	public static int alto;
 
 	public static void main(String[] args) {
 		solicitarDificultad();
@@ -17,8 +19,6 @@ public class Main {
 		int opc = 0;
 		
 		//Variables con los datos para crear el tablero y la cantidad de minas
-		int ancho = 0;
-		int alto = 0;
 		int cantidadMinas = 0;
 		
 		//Definimos las variables dependiendo de la dificultad seleccionada
@@ -44,19 +44,19 @@ public class Main {
 		
 		//Generamos las posiciones de las minas aleatoriamente
 		generarMinas(cantidadMinas, alto * ancho);
-		imprimirMinas();
+		//imprimirMinas();
 		
 		//Creamos el tablero
-		crearVenataBuscaminas(alto, ancho);
+		crearVenataBuscaminas();
 	}
 	
 	//Crear ventana buscaminas
-	private static void crearVenataBuscaminas(int altura, int longitud){
+	private static void crearVenataBuscaminas(){
 		//Creamos la ventana del tablero del buscaminas
 		vb = new VentanaBuscaminas();
 		
 		//Le damos el tamaño deseado
-		vb.setLayout(altura, longitud);
+		vb.setLayout(alto, ancho);
 		
 		//Lo mostramos
 		vb.setVisible(true);
