@@ -13,13 +13,14 @@ import javax.swing.border.EmptyBorder;
 import Controlador.Main;
 
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VentanaBuscaminas extends JFrame {
 
 	private JPanel contentPane;
 	private JPanel panelCentral;
+	private JButton btnNewButton;
 
 	/**
 	 * Launch the application.
@@ -52,6 +53,7 @@ public class VentanaBuscaminas extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		contentPane.add(getPanelCentral(), BorderLayout.CENTER);
+		crearTablero();
 	}
 
 	private JPanel getPanelCentral() {
@@ -62,265 +64,137 @@ public class VentanaBuscaminas extends JFrame {
 		return panelCentral;
 	}
 
-	public void setLayout(int altura, int longitud) {
-		panelCentral.setLayout(new GridLayout(altura, longitud, 0, 0));
-		JButton Botones[][] = new JButton[longitud][altura];
+	private void crearTablero() {
+		if (Main.partida.getAlto() > 0) {
+			panelCentral.setLayout(new GridLayout(Main.partida.getAncho(), Main.partida.getAlto(), 0, 0));
+		}
 
-		for (int i = 0; i < longitud; i++) {
-			for (int j = 0; j < altura; j++) {
-				Botones[i][j] = new JButton();
-				panelCentral.add(Botones[i][j]);
-
-				Botones[i][j].addActionListener(new ActionListener() {
+		for (int i = 0; i < Main.partida.getCantCasillas(); i++) {
+			JButton btn = new JButton();
+			if (Main.partida.esBomba(i)) {
+				btn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						for (int i = 0; i < longitud; i++) {
-							for (int j = 0; j < altura; j++) {
-								if (e.getSource() == Botones[i][j]) {
-									int casilla = (i * 10) + j;
-									boolean mina = false;
-									for (int z = 0; z < Main.minas.length && mina == false; z++) {
-										if (casilla == Main.minas[z]) {
-											mina = true;
-										}
-									}
-
-									if (mina) {
-										mostrarBomba(i, j);
-									} else {
-										contarBombas(i, j);
-									}
-								}
+						for (int i = 0; i < Main.partida.getCantCasillas(); i++) {
+							if (e.getSource() == panelCentral.getComponent(i)) {
+								clickBomba(i);
+							}
+						}
+					}
+				});
+			} else {
+				btn.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						for (int i = 0; i < Main.partida.getCantCasillas(); i++) {
+							if (e.getSource() == panelCentral.getComponent(i)) {
+								clickCasilla(i);
 							}
 						}
 					}
 				});
 			}
+
+			panelCentral.add(btn);
 		}
 	}
 
-	private void contarBombas(int altura, int longitud) {
-		int bombasCerca = 0;
-		int posiciones[] = { -1, -1, -1, -1, -1, -1, -1, -1 };
+	private void clickCasilla(int posicion) {
+		((AbstractButton) panelCentral.getComponent(posicion)).setBackground(Color.green);
+		((AbstractButton) panelCentral.getComponent(posicion)).setEnabled(false);
 
-		if (altura == 0) {
-			if (longitud == 0) {
-				// Derecha
-				posiciones[0] = (altura * 10) + (longitud + 1);
-				// Abajo
-				posiciones[1] = ((altura + 1) * 10) + longitud;
-				// Derecha + abajo
-				posiciones[2] = ((altura + 1) * 10) + (longitud + 1);
-			} else if (longitud == Main.alto - 1) {
-				// Izquierda
-				posiciones[0] = (altura * 10) + (longitud - 1);
-				// Abajo
-				posiciones[1] = ((altura + 1) * 10) + longitud;
-				// Izquierda + abajo
-				posiciones[2] = ((altura + 1) * 10) + (longitud - 1);
-			} else {
-				// Izquierda
-				posiciones[0] = (altura * 10) + (longitud - 1);
-				// Derecha
-				posiciones[1] = (altura * 10) + (longitud + 1);
-				// Abajo
-				posiciones[2] = ((altura + 1) * 10) + longitud;
-				// Izquierda + abajo
-				posiciones[3] = ((altura + 1) * 10) + (longitud - 1);
-				// Derecha + abajo
-				posiciones[4] = ((altura + 1) * 10) + (longitud + 1);
-			}
-		} else if (altura == Main.ancho - 1) {
-			if (longitud == 0) {
-				// Derecha
-				posiciones[0] = (altura * 10) + (longitud + 1);
-				// Arriba
-				posiciones[1] = ((altura - 1) * 10) + longitud;
-				// Derecha + arriba
-				posiciones[2] = ((altura - 1) * 10) + (longitud + 1);
-			} else if (longitud == Main.alto - 1) {
-				// Izquierda
-				posiciones[0] = (altura * 10) + (longitud - 1);
-				// Arriba
-				posiciones[1] = ((altura - 1) * 10) + longitud;
-				// Izquierda + arriba
-				posiciones[2] = ((altura - 1) * 10) + (longitud - 1);
-			} else {
-				// Izquierda
-				posiciones[0] = (altura * 10) + (longitud - 1);
-				// Derecha
-				posiciones[1] = (altura * 10) + (longitud + 1);
-				// Arriba
-				posiciones[2] = ((altura - 1) * 10) + longitud;
-				// Izquierda + arriba
-				posiciones[3] = ((altura - 1) * 10) + (longitud - 1);
-				// Derecha + arriba
-				posiciones[4] = ((altura - 1) * 10) + (longitud + 1);
-			}
+		int bombasCerca = 0;
+		int posCont[] = { posicion - Main.partida.getAncho() - 1, posicion - Main.partida.getAncho(),
+				posicion - Main.partida.getAncho() + 1, posicion - 1, posicion + 1,
+				posicion + Main.partida.getAncho() - 1, posicion + Main.partida.getAncho(),
+				posicion + Main.partida.getAncho() + 1 };
+
+		if (posCont[0] < 0 || posCont[0] / Main.partida.getAncho() < posCont[1] / Main.partida.getAncho()) {
+			posCont[0] = -1;
 		} else {
-			if (longitud == 0) {
-				// Derecha
-				posiciones[0] = (altura * 10) + (longitud + 1);
-				// Abajo
-				posiciones[1] = ((altura + 1) * 10) + longitud;
-				// Arriba
-				posiciones[2] = ((altura - 1) * 10) + longitud;
-				// Derecha + abajo
-				posiciones[3] = ((altura + 1) * 10) + (longitud + 1);
-				// Derecha + arriba
-				posiciones[4] = ((altura - 1) * 10) + (longitud + 1);
-			} else if (longitud == Main.alto - 1) {
-				// Izquierda
-				posiciones[0] = (altura * 10) + (longitud - 1);
-				// Abajo
-				posiciones[1] = ((altura + 1) * 10) + longitud;
-				// Arriba
-				posiciones[2] = ((altura - 1) * 10) + longitud;
-				// Izquierda + abajo
-				posiciones[3] = ((altura + 1) * 10) + (longitud - 1);
-				// Izquierda + arriba
-				posiciones[4] = ((altura - 1) * 10) + (longitud - 1);
-			} else {
-				// Izquierda + arriba
-				posiciones[0] = (((altura - 1) * 10) + (longitud - 1));
-				// Arriba
-				posiciones[1] = (((altura - 1) * 10) + longitud);
-				// Derecha + arriba
-				posiciones[2] = (((altura - 1) * 10) + (longitud + 1));
-				// Izquierda
-				posiciones[3] = ((altura * 10) + (longitud - 1));
-				// Derecha
-				posiciones[4] = ((altura * 10) + (longitud + 1));
-				// Izquierda + abajo
-				posiciones[5] = (((altura + 1) * 10) + (longitud - 1));
-				// Abajo
-				posiciones[6] = (((altura + 1) * 10) + longitud);
-				// Derecha + abajo
-				posiciones[7] = (((altura + 1) * 10) + (longitud + 1));
+			if (Main.partida.esBomba(posCont[0])) {
+				bombasCerca++;
 			}
 		}
 
-		for (int i = 0; i < posiciones.length; i++) {
-			for (int j = 0; j < Main.minas.length; j++) {
-				if (posiciones[i] == Main.minas[j]) {
-					bombasCerca++;
+		if (posCont[1] < 0) {
+			posCont[1] = -1;
+		} else {
+			if (Main.partida.esBomba(posCont[1])) {
+				bombasCerca++;
+			}
+		}
+
+		if (posCont[2] < 0 || posCont[2] / Main.partida.getAncho() > posCont[1] / Main.partida.getAncho()) {
+			posCont[2] = -1;
+		} else {
+			if (Main.partida.esBomba(posCont[2])) {
+				bombasCerca++;
+			}
+		}
+
+		if (posCont[3] < 0 || posCont[3] / Main.partida.getAncho() < posicion / Main.partida.getAncho()) {
+			posCont[3] = -1;
+		} else {
+			if (Main.partida.esBomba(posCont[3])) {
+				bombasCerca++;
+			}
+		}
+
+		if (posCont[4] > Main.partida.getCantCasillas() - 1
+				|| posCont[4] / Main.partida.getAncho() > posicion / Main.partida.getAncho()) {
+			posCont[4] = -1;
+		} else {
+			if (Main.partida.esBomba(posCont[4])) {
+				bombasCerca++;
+			}
+		}
+
+		if (posCont[5] > Main.partida.getCantCasillas() - 1
+				|| posCont[5] / Main.partida.getAncho() < posCont[6] / Main.partida.getAncho()) {
+			posCont[5] = -1;
+		} else {
+			if (Main.partida.esBomba(posCont[5])) {
+				bombasCerca++;
+			}
+		}
+
+		if (posCont[6] > Main.partida.getCantCasillas() - 1) {
+			posCont[6] = -1;
+		} else {
+			if (Main.partida.esBomba(posCont[6])) {
+				bombasCerca++;
+			}
+		}
+
+		if (posCont[7] > Main.partida.getCantCasillas() - 1
+				|| posCont[7] / Main.partida.getAncho() > posCont[6] / Main.partida.getAncho()) {
+			posCont[7] = -1;
+		} else {
+			if (Main.partida.esBomba(posCont[7])) {
+				bombasCerca++;
+			}
+		}
+
+		((AbstractButton) panelCentral.getComponent(posicion)).setText(bombasCerca + "");
+
+		if (bombasCerca == 0) {
+			mostrarCasillas(posCont);
+		}
+	}
+
+	private void clickBomba(int posicion) {
+		((AbstractButton) panelCentral.getComponent(posicion)).setBackground(Color.red);
+		((AbstractButton) panelCentral.getComponent(posicion)).setEnabled(false);
+
+		javax.swing.JOptionPane.showMessageDialog(this, "CABUMMM");
+	}
+
+	private void mostrarCasillas(int[] casillas) {
+		for (int i = 0; i < casillas.length; i++) {
+			if (casillas[i] != -1) {
+				if (((AbstractButton) panelCentral.getComponent(casillas[i])).isEnabled()) {
+					((AbstractButton) panelCentral.getComponent(casillas[i])).doClick();
 				}
 			}
 		}
-
-		((AbstractButton) panelCentral.getComponent(altura * 10 + longitud)).setBackground(Color.GREEN);
-		((AbstractButton) panelCentral.getComponent(altura * 10 + longitud)).setEnabled(false);
-		((AbstractButton) panelCentral.getComponent(altura * 10 + longitud)).setText(bombasCerca + "");
-
-		// javax.swing.JOptionPane.showMessageDialog(null, "ok");
-
-		if (bombasCerca == 0) {
-			mostrarCasillas(altura, longitud);
-		}
-
 	}
-
-	private void mostrarCasillas(int altura, int longitud) {
-		if (altura == 0) {
-			if (longitud == 0) {
-				// Derecha
-				((AbstractButton) panelCentral.getComponent((altura * 10) + (longitud + 1))).doClick();
-				// Abajo
-				((AbstractButton) panelCentral.getComponent(((altura + 1) * 10) + longitud)).doClick();
-				// Derecha + abajo
-				((AbstractButton) panelCentral.getComponent(((altura + 1) * 10) + (longitud + 1))).doClick();
-			} else if (longitud == Main.alto - 1) {
-				// Izquierda
-				((AbstractButton) panelCentral.getComponent((altura * 10) + (longitud - 1))).doClick();
-				// Abajo
-				((AbstractButton) panelCentral.getComponent(((altura + 1) * 10) + longitud)).doClick();
-				// Izquierda + abajo
-				((AbstractButton) panelCentral.getComponent(((altura + 1) * 10) + (longitud - 1))).doClick();
-			} else {
-				// Izquierda
-				((AbstractButton) panelCentral.getComponent((altura * 10) + (longitud - 1))).doClick();
-				// Derecha
-				((AbstractButton) panelCentral.getComponent((altura * 10) + (longitud + 1))).doClick();
-				// Abajo
-				((AbstractButton) panelCentral.getComponent(((altura + 1) * 10) + longitud)).doClick();
-				// Izquierda + abajo
-				((AbstractButton) panelCentral.getComponent(((altura + 1) * 10) + (longitud - 1))).doClick();
-				// Derecha + abajo
-				((AbstractButton) panelCentral.getComponent(((altura + 1) * 10) + (longitud + 1))).doClick();
-			}
-		} else if (altura == Main.ancho - 1) {
-			if (longitud == 0) {
-				// Derecha
-				((AbstractButton) panelCentral.getComponent((altura * 10) + (longitud + 1))).doClick();
-				// Arriba
-				((AbstractButton) panelCentral.getComponent(((altura - 1) * 10) + longitud)).doClick();
-				// Derecha + arriba
-				((AbstractButton) panelCentral.getComponent(((altura - 1) * 10) + (longitud + 1))).doClick();
-			} else if (longitud == Main.alto - 1) {
-				// Izquierda
-				((AbstractButton) panelCentral.getComponent((altura * 10) + (longitud - 1))).doClick();
-				// Arriba
-				((AbstractButton) panelCentral.getComponent(((altura - 1) * 10) + longitud)).doClick();
-				// Izquierda + arriba
-				((AbstractButton) panelCentral.getComponent(((altura - 1) * 10) + (longitud - 1))).doClick();
-			} else {
-				// Izquierda
-				((AbstractButton) panelCentral.getComponent((altura * 10) + (longitud - 1))).doClick();
-				// Derecha
-				((AbstractButton) panelCentral.getComponent((altura * 10) + (longitud + 1))).doClick();
-				// Arriba
-				((AbstractButton) panelCentral.getComponent(((altura - 1) * 10) + longitud)).doClick();
-				// Izquierda + arriba
-				((AbstractButton) panelCentral.getComponent(((altura - 1) * 10) + (longitud - 1))).doClick();
-				// Derecha + arriba
-				((AbstractButton) panelCentral.getComponent(((altura - 1) * 10) + (longitud + 1))).doClick();
-			}
-		} else {
-			if (longitud == 0) {
-				// Derecha
-				((AbstractButton) panelCentral.getComponent((altura * 10) + (longitud + 1))).doClick();
-				// Abajo
-				((AbstractButton) panelCentral.getComponent(((altura + 1) * 10) + longitud)).doClick();
-				// Arriba
-				((AbstractButton) panelCentral.getComponent(((altura - 1) * 10) + longitud)).doClick();
-				// Derecha + abajo
-				((AbstractButton) panelCentral.getComponent(((altura + 1) * 10) + (longitud + 1))).doClick();
-				// Derecha + arriba
-				((AbstractButton) panelCentral.getComponent(((altura - 1) * 10) + (longitud + 1))).doClick();
-			} else if (longitud == Main.alto - 1) {
-				// Izquierda
-				((AbstractButton) panelCentral.getComponent((altura * 10) + (longitud - 1))).doClick();
-				// Abajo
-				((AbstractButton) panelCentral.getComponent(((altura + 1) * 10) + longitud)).doClick();
-				// Arriba
-				((AbstractButton) panelCentral.getComponent(((altura - 1) * 10) + longitud)).doClick();
-				// Izquierda + abajo
-				((AbstractButton) panelCentral.getComponent(((altura + 1) * 10) + (longitud - 1))).doClick();
-				// Izquierda + arriba
-				((AbstractButton) panelCentral.getComponent(((altura - 1) * 10) + (longitud - 1))).doClick();
-			} else {
-				// Izquierda + arriba
-				((AbstractButton) panelCentral.getComponent((((altura - 1) * 10) + (longitud - 1)))).doClick();
-				// Arriba
-				((AbstractButton) panelCentral.getComponent((((altura - 1) * 10) + longitud))).doClick();
-				// Derecha + arriba
-				((AbstractButton) panelCentral.getComponent((((altura - 1) * 10) + (longitud + 1)))).doClick();
-				// Izquierda
-				((AbstractButton) panelCentral.getComponent(((altura * 10) + (longitud - 1)))).doClick();
-				// Derecha
-				((AbstractButton) panelCentral.getComponent(((altura * 10) + (longitud + 1)))).doClick();
-				// Izquierda + abajo
-				((AbstractButton) panelCentral.getComponent((((altura + 1) * 10) + (longitud - 1)))).doClick();
-				// Abajo
-				((AbstractButton) panelCentral.getComponent((((altura + 1) * 10) + longitud))).doClick();
-				// Derecha + abajo
-				((AbstractButton) panelCentral.getComponent((((altura + 1) * 10) + (longitud + 1)))).doClick();
-			}
-		}
-	}
-
-	private void mostrarBomba(int altura, int longitud) {
-		((AbstractButton) panelCentral.getComponent(altura * 10 + longitud)).setBackground(Color.RED);
-		((AbstractButton) panelCentral.getComponent(altura * 10 + longitud)).setEnabled(false);
-	}
-
 }
