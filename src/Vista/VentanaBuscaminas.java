@@ -13,8 +13,10 @@ import javax.swing.border.EmptyBorder;
 import Controlador.Main;
 
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
 
 public class VentanaBuscaminas extends JFrame {
 
@@ -47,7 +49,7 @@ public class VentanaBuscaminas extends JFrame {
 
 	private void initialize() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 519, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -66,11 +68,12 @@ public class VentanaBuscaminas extends JFrame {
 
 	private void crearTablero() {
 		if (Main.partida.getAlto() > 0) {
-			panelCentral.setLayout(new GridLayout(Main.partida.getAncho(), Main.partida.getAlto(), 0, 0));
+			panelCentral.setLayout(new GridLayout(Main.partida.getAlto(), Main.partida.getAncho(), 0, 0));
 		}
 
 		for (int i = 0; i < Main.partida.getCantCasillas(); i++) {
 			JButton btn = new JButton();
+			btn.setMargin(new Insets(1, 1, 1, 1));
 			if (Main.partida.esBomba(i)) {
 				btn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -174,10 +177,10 @@ public class VentanaBuscaminas extends JFrame {
 			}
 		}
 
-		((AbstractButton) panelCentral.getComponent(posicion)).setText(bombasCerca + "");
-
 		if (bombasCerca == 0) {
 			mostrarCasillas(posCont);
+		} else {
+			((AbstractButton) panelCentral.getComponent(posicion)).setText(bombasCerca + "");
 		}
 	}
 

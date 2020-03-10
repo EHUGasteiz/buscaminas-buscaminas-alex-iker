@@ -19,10 +19,10 @@ public class Main {
 			partida = new Partida(10, 10, 10);
 			break;
 		case 1:
-			partida = new Partida(20, 10, 15);
+			partida = new Partida(10, 20, 25);
 			break;
 		case 2:
-			partida = new Partida(20, 20, 20);
+			partida = new Partida(20, 20, 50);
 			break;
 		}
 		
@@ -34,6 +34,8 @@ public class Main {
 	private static void crearVenataBuscaminas(){
 		//Creamos la ventana del tablero del buscaminas
 		vb = new VentanaBuscaminas();
+		
+		vb.setBounds(100, 100, partida.getAncho() * 30, partida.getAlto() * 30);
 		
 		//Lo mostramos
 		vb.setVisible(true);
