@@ -89,85 +89,9 @@ public class Partida {
 		return esBomba;
 	}
 	
-	public int calcularBombasCerca(int posicion) {
+	public List<Integer> calcularCasillas(int posicion) {
+		List<Integer> casillasMostrar = new LinkedList<Integer>();
 		int bombasCerca = 0;
-		int posCont[] = { posicion - ancho - 1, posicion - ancho,
-				posicion - ancho + 1, posicion - 1, posicion + 1,
-				posicion + ancho - 1, posicion + ancho,
-				posicion + ancho + 1 };
-
-		if (posCont[0] < 0 || posCont[0] / ancho < posCont[1] / ancho) {
-			posCont[0] = -1;
-		} else {
-			if (esBomba(posCont[0])) {
-				bombasCerca++;
-			}
-		}
-
-		if (posCont[1] < 0) {
-			posCont[1] = -1;
-		} else {
-			if (esBomba(posCont[1])) {
-				bombasCerca++;
-			}
-		}
-
-		if (posCont[2] < 0 || posCont[2] / ancho > posCont[1] / ancho) {
-			posCont[2] = -1;
-		} else {
-			if (esBomba(posCont[2])) {
-				bombasCerca++;
-			}
-		}
-
-		if (posCont[3] < 0 || posCont[3] / ancho < posicion / ancho) {
-			posCont[3] = -1;
-		} else {
-			if (esBomba(posCont[3])) {
-				bombasCerca++;
-			}
-		}
-
-		if (posCont[4] > getCantCasillas() - 1
-				|| posCont[4] / ancho > posicion / ancho) {
-			posCont[4] = -1;
-		} else {
-			if (esBomba(posCont[4])) {
-				bombasCerca++;
-			}
-		}
-
-		if (posCont[5] > getCantCasillas() - 1
-				|| posCont[5] / ancho < posCont[6] / ancho) {
-			posCont[5] = -1;
-		} else {
-			if (esBomba(posCont[5])) {
-				bombasCerca++;
-			}
-		}
-
-		if (posCont[6] > getCantCasillas() - 1) {
-			posCont[6] = -1;
-		} else {
-			if (esBomba(posCont[6])) {
-				bombasCerca++;
-			}
-		}
-
-		if (posCont[7] > getCantCasillas() - 1
-				|| posCont[7] / ancho > posCont[6] / ancho) {
-			posCont[7] = -1;
-		} else {
-			if (esBomba(posCont[7])) {
-				bombasCerca++;
-			}
-		}
-		
-		return bombasCerca;
-	}
-	
-	public List<Integer> calcularMostrarCasillas(int posicion) {
-		List<Integer> casillasMostrar = new LinkedList();
 		
 		int posCont[] = { posicion - ancho - 1, posicion - ancho,
 				posicion - ancho + 1, posicion - 1, posicion + 1,
@@ -176,37 +100,66 @@ public class Partida {
 
 		if (!(posCont[0] < 0 || posCont[0] / ancho < posCont[1] / ancho)) {
 			casillasMostrar.add(posCont[0]);
+			if(esBomba(posCont[0])) {
+				bombasCerca++;
+			}
 		}
 
 		if (!(posCont[1] < 0)) {
 			casillasMostrar.add(posCont[1]);
+			if(esBomba(posCont[1])) {
+				bombasCerca++;
+			}
 		}
 
 		if (!(posCont[2] < 0 || posCont[2] / ancho > posCont[1] / ancho)) {
 			casillasMostrar.add(posCont[2]);
+			if(esBomba(posCont[2])) {
+				bombasCerca++;
+			}
 		}
 
 		if (!(posCont[3] < 0 || posCont[3] / ancho < posicion / ancho)) {
 			casillasMostrar.add(posCont[3]);
+			if(esBomba(posCont[3])) {
+				bombasCerca++;
+			}
 		}
 
 		if (!(posCont[4] > getCantCasillas() - 1
 				|| posCont[4] / ancho > posicion / ancho)) {
 			casillasMostrar.add(posCont[4]);
+			if(esBomba(posCont[4])) {
+				bombasCerca++;
+			}
 		}
 
 		if (!(posCont[5] > getCantCasillas() - 1
 				|| posCont[5] / ancho < posCont[6] / ancho)) {
 			casillasMostrar.add(posCont[5]);
+			if(esBomba(posCont[5])) {
+				bombasCerca++;
+			}
 		}
 
 		if (!(posCont[6] > getCantCasillas() - 1)) {
 			casillasMostrar.add(posCont[6]);
+			if(esBomba(posCont[6])) {
+				bombasCerca++;
+			}
 		}
 
 		if (!(posCont[7] > getCantCasillas() - 1
 				|| posCont[7] / ancho > posCont[6] / ancho)) {
 			casillasMostrar.add(posCont[7]);
+			if(esBomba(posCont[7])) {
+				bombasCerca++;
+			}
+		}
+		
+		if(bombasCerca != 0) {
+			casillasMostrar = new LinkedList<Integer>();
+			casillasMostrar.add(bombasCerca);
 		}
 		
 		return casillasMostrar;

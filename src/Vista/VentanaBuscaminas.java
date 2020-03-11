@@ -22,7 +22,6 @@ public class VentanaBuscaminas extends JFrame {
 
 	private JPanel contentPane;
 	private JPanel panelCentral;
-	private JButton btnNewButton;
 
 	/**
 	 * Launch the application.
@@ -74,56 +73,39 @@ public class VentanaBuscaminas extends JFrame {
 		for (int i = 0; i < Main.partida.getCantCasillas(); i++) {
 			JButton btn = new JButton();
 			btn.setMargin(new Insets(1, 1, 1, 1));
-			if (Main.partida.esBomba(i)) {
-				btn.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						for (int i = 0; i < Main.partida.getCantCasillas(); i++) {
-							if (e.getSource() == panelCentral.getComponent(i)) {
-								clickBomba(i);
-							}
+			btn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					for (int i = 0; i < Main.partida.getCantCasillas(); i++) {
+						if (e.getSource() == panelCentral.getComponent(i)) {
+							clickCasilla(i);
 						}
 					}
-				});
-			} else {
-				btn.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						for (int i = 0; i < Main.partida.getCantCasillas(); i++) {
-							if (e.getSource() == panelCentral.getComponent(i)) {
-								clickCasilla(i);
-							}
-						}
-					}
-				});
-			}
+				}
+			});
 
 			panelCentral.add(btn);
 		}
 	}
 
 	private void clickCasilla(int posicion) {
-		((AbstractButton) panelCentral.getComponent(posicion)).setBackground(Color.green);
-		((AbstractButton) panelCentral.getComponent(posicion)).setEnabled(false);
-
-		int bombasCerca = Main.partida.calcularBombasCerca(posicion);
-		if (bombasCerca == 0) {
-			mostrarCasillas(posicion);
+		if (Main.partida.esBomba(posicion)) {
+			for (int mina : Main.partida.getMinas()) {
+				((AbstractButton) panelCentral.getComponent(mina)).setBackground(Color.red);
+				((AbstractButton) panelCentral.getComponent(mina)).setEnabled(false);
+			}
+			javax.swing.JOptionPane.showMessageDialog(this, "CABUMMM");
 		} else {
-			((AbstractButton) panelCentral.getComponent(posicion)).setText(bombasCerca + "");
-		}
-	}
-
-	private void clickBomba(int posicion) {
-		((AbstractButton) panelCentral.getComponent(posicion)).setBackground(Color.red);
-		((AbstractButton) panelCentral.getComponent(posicion)).setEnabled(false);
-
-		javax.swing.JOptionPane.showMessageDialog(this, "CABUMMM");
-	}
-
-	private void mostrarCasillas(int posicion) {
-		List<Integer> casillasMostrar = Main.partida.calcularMostrarCasillas(posicion);
-		for (int pos : casillasMostrar) {
-			if (((AbstractButton) panelCentral.getComponent(pos)).isEnabled()) {
-				clickCasilla(pos);
+			((AbstractButton) panelCentral.getComponent(posicion)).setBackground(Color.green);
+			((AbstractButton) panelCentral.getComponent(posicion)).setEnabled(false);
+			List<Integer> casillasMostrar = Main.partida.calcularCasillas(posicion);
+			if (casillasMostrar.size() == 1) {
+				((AbstractButton) panelCentral.getComponent(posicion)).setText(casillasMostrar.get(0).toString());
+			} else {
+				for (Integer pos : casillasMostrar) {
+					if (((AbstractButton) panelCentral.getComponent(pos)).isEnabled()) {
+						clickCasilla(pos);
+					}
+				}
 			}
 		}
 	}
