@@ -10,11 +10,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.ListIterator;
+
 import Controlador.Main;
 
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 
@@ -89,7 +92,7 @@ public class VentanaBuscaminas extends JFrame {
 					public void actionPerformed(ActionEvent e) {
 						for (int i = 0; i < Main.partida.getCantCasillas(); i++) {
 							if (e.getSource() == panelCentral.getComponent(i)) {
-								clickCasilla(i);
+								clickCasilla(i, Main.partida.calcularBombasCerca(i));
 							}
 						}
 					}
@@ -100,85 +103,12 @@ public class VentanaBuscaminas extends JFrame {
 		}
 	}
 
-	private void clickCasilla(int posicion) {
+	private void clickCasilla(int posicion, int bombasCerca) {
 		((AbstractButton) panelCentral.getComponent(posicion)).setBackground(Color.green);
 		((AbstractButton) panelCentral.getComponent(posicion)).setEnabled(false);
 
-		int bombasCerca = 0;
-		int posCont[] = { posicion - Main.partida.getAncho() - 1, posicion - Main.partida.getAncho(),
-				posicion - Main.partida.getAncho() + 1, posicion - 1, posicion + 1,
-				posicion + Main.partida.getAncho() - 1, posicion + Main.partida.getAncho(),
-				posicion + Main.partida.getAncho() + 1 };
-
-		if (posCont[0] < 0 || posCont[0] / Main.partida.getAncho() < posCont[1] / Main.partida.getAncho()) {
-			posCont[0] = -1;
-		} else {
-			if (Main.partida.esBomba(posCont[0])) {
-				bombasCerca++;
-			}
-		}
-
-		if (posCont[1] < 0) {
-			posCont[1] = -1;
-		} else {
-			if (Main.partida.esBomba(posCont[1])) {
-				bombasCerca++;
-			}
-		}
-
-		if (posCont[2] < 0 || posCont[2] / Main.partida.getAncho() > posCont[1] / Main.partida.getAncho()) {
-			posCont[2] = -1;
-		} else {
-			if (Main.partida.esBomba(posCont[2])) {
-				bombasCerca++;
-			}
-		}
-
-		if (posCont[3] < 0 || posCont[3] / Main.partida.getAncho() < posicion / Main.partida.getAncho()) {
-			posCont[3] = -1;
-		} else {
-			if (Main.partida.esBomba(posCont[3])) {
-				bombasCerca++;
-			}
-		}
-
-		if (posCont[4] > Main.partida.getCantCasillas() - 1
-				|| posCont[4] / Main.partida.getAncho() > posicion / Main.partida.getAncho()) {
-			posCont[4] = -1;
-		} else {
-			if (Main.partida.esBomba(posCont[4])) {
-				bombasCerca++;
-			}
-		}
-
-		if (posCont[5] > Main.partida.getCantCasillas() - 1
-				|| posCont[5] / Main.partida.getAncho() < posCont[6] / Main.partida.getAncho()) {
-			posCont[5] = -1;
-		} else {
-			if (Main.partida.esBomba(posCont[5])) {
-				bombasCerca++;
-			}
-		}
-
-		if (posCont[6] > Main.partida.getCantCasillas() - 1) {
-			posCont[6] = -1;
-		} else {
-			if (Main.partida.esBomba(posCont[6])) {
-				bombasCerca++;
-			}
-		}
-
-		if (posCont[7] > Main.partida.getCantCasillas() - 1
-				|| posCont[7] / Main.partida.getAncho() > posCont[6] / Main.partida.getAncho()) {
-			posCont[7] = -1;
-		} else {
-			if (Main.partida.esBomba(posCont[7])) {
-				bombasCerca++;
-			}
-		}
-
 		if (bombasCerca == 0) {
-			mostrarCasillas(posCont);
+			mostrarCasillas(posicion);
 		} else {
 			((AbstractButton) panelCentral.getComponent(posicion)).setText(bombasCerca + "");
 		}
@@ -191,12 +121,11 @@ public class VentanaBuscaminas extends JFrame {
 		javax.swing.JOptionPane.showMessageDialog(this, "CABUMMM");
 	}
 
-	private void mostrarCasillas(int[] casillas) {
-		for (int i = 0; i < casillas.length; i++) {
-			if (casillas[i] != -1) {
-				if (((AbstractButton) panelCentral.getComponent(casillas[i])).isEnabled()) {
-					((AbstractButton) panelCentral.getComponent(casillas[i])).doClick();
-				}
+	private void mostrarCasillas(int posicion) {
+		List<Integer> casillasMostrar = Main.partida.calcularMostrarCasillas(posicion);
+		for (int pos : casillasMostrar) {
+			if (((AbstractButton) panelCentral.getComponent(pos)).isEnabled()) {
+				((AbstractButton) panelCentral.getComponent(pos)).doClick();
 			}
 		}
 	}
