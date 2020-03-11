@@ -10,8 +10,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.ListIterator;
-
 import Controlador.Main;
 
 import java.awt.GridLayout;
@@ -19,7 +17,6 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
 
 public class VentanaBuscaminas extends JFrame {
 
@@ -92,7 +89,7 @@ public class VentanaBuscaminas extends JFrame {
 					public void actionPerformed(ActionEvent e) {
 						for (int i = 0; i < Main.partida.getCantCasillas(); i++) {
 							if (e.getSource() == panelCentral.getComponent(i)) {
-								clickCasilla(i, Main.partida.calcularBombasCerca(i));
+								clickCasilla(i);
 							}
 						}
 					}
@@ -103,10 +100,11 @@ public class VentanaBuscaminas extends JFrame {
 		}
 	}
 
-	private void clickCasilla(int posicion, int bombasCerca) {
+	private void clickCasilla(int posicion) {
 		((AbstractButton) panelCentral.getComponent(posicion)).setBackground(Color.green);
 		((AbstractButton) panelCentral.getComponent(posicion)).setEnabled(false);
 
+		int bombasCerca = Main.partida.calcularBombasCerca(posicion);
 		if (bombasCerca == 0) {
 			mostrarCasillas(posicion);
 		} else {
@@ -125,7 +123,7 @@ public class VentanaBuscaminas extends JFrame {
 		List<Integer> casillasMostrar = Main.partida.calcularMostrarCasillas(posicion);
 		for (int pos : casillasMostrar) {
 			if (((AbstractButton) panelCentral.getComponent(pos)).isEnabled()) {
-				((AbstractButton) panelCentral.getComponent(pos)).doClick();
+				clickCasilla(pos);
 			}
 		}
 	}
