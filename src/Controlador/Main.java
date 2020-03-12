@@ -16,13 +16,13 @@ public class Main {
 		//Definimos las variables dependiendo de la dificultad seleccionada
 		switch (opc) {
 		case 0:
-			partida = new Partida(10, 10, 10);
+			partida = Partida.getPartida(10, 10, 10);
 			break;
 		case 1:
-			partida = new Partida(10, 20, 25);
+			partida = Partida.getPartida(10, 20, 25);
 			break;
 		case 2:
-			partida = new Partida(20, 20, 50);
+			partida = Partida.getPartida(20, 20, 50);
 			break;
 		}
 		

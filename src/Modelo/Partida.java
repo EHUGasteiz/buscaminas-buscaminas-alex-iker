@@ -5,16 +5,33 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+
+
 public class Partida {
 	private int ancho;
 	private int alto;
 	private int[] minas;
+	private static Partida mPartida;
 	
-	public Partida(int ancho, int alto, int cantidad) {
+	
+	 //Constructor privado de la clase
+	private Partida(int ancho, int alto, int cantidad) {
 		super();
 		this.ancho = ancho;
 		this.alto = alto;
 		generarMinas(cantidad);
+	}
+	/**
+	 * getPartida.
+	 * Metodo estatico que devuelve la instancia unica de la clase
+	 * @return la instancia unica
+	 */
+	public static Partida getPartida(int ancho, int alto, int cantidad) {
+		if(mPartida==null) {
+			mPartida = new Partida(ancho,alto,cantidad);
+		}
+		
+		return mPartida;
 	}
 	
 	private void generarMinas(int cantidad) {
