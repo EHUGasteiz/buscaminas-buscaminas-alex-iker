@@ -17,6 +17,7 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
 
 public class VentanaBuscaminas extends JFrame {
 
@@ -92,6 +93,7 @@ public class VentanaBuscaminas extends JFrame {
 			for (int mina : Main.partida.getMinas()) {
 				((AbstractButton) panelCentral.getComponent(mina)).setBackground(Color.red);
 				((AbstractButton) panelCentral.getComponent(mina)).setEnabled(false);
+				((AbstractButton) panelCentral.getComponent(mina)).setIcon(new ImageIcon("image\\mina15.png"));
 			}
 			javax.swing.JOptionPane.showMessageDialog(this, "CABUMMM");
 		} else {
