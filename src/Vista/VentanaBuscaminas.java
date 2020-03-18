@@ -15,14 +15,14 @@ import Controlador.Main;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
-import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 
 public class VentanaBuscaminas extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JPanel panelCentral;
+	private static JPanel panelCentral;
 
 	/**
 	 * Launch the application.
@@ -72,43 +72,31 @@ public class VentanaBuscaminas extends JFrame {
 		}
 
 		for (int i = 0; i < Main.partida.getCantCasillas(); i++) {
+			final int numCasilla = i;
 			JButton btn = new JButton();
 			btn.setMargin(new Insets(1, 1, 1, 1));
 			btn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					for (int i = 0; i < Main.partida.getCantCasillas(); i++) {
-						if (e.getSource() == panelCentral.getComponent(i)) {
-							clickCasilla(i);
-						}
-					}
+					Main.partida.calcularCasillas(numCasilla);
 				}
 			});
-
 			panelCentral.add(btn);
 		}
 	}
 
-	private void clickCasilla(int posicion) {
-		if (Main.partida.esBomba(posicion)) {
-			for (int mina : Main.partida.getMinas()) {
-				((AbstractButton) panelCentral.getComponent(mina)).setBackground(Color.red);
-				((AbstractButton) panelCentral.getComponent(mina)).setEnabled(false);
-				((AbstractButton) panelCentral.getComponent(mina)).setIcon(new ImageIcon("image\\mina15.png"));
-			}
-			javax.swing.JOptionPane.showMessageDialog(this, "CABUMMM");
-		} else {
-			((AbstractButton) panelCentral.getComponent(posicion)).setBackground(Color.green);
-			((AbstractButton) panelCentral.getComponent(posicion)).setEnabled(false);
-			List<Integer> casillasMostrar = Main.partida.calcularCasillas(posicion);
-			if (casillasMostrar.size() == 1) {
-				((AbstractButton) panelCentral.getComponent(posicion)).setText(casillasMostrar.get(0).toString());
-			} else {
-				for (Integer pos : casillasMostrar) {
-					if (((AbstractButton) panelCentral.getComponent(pos)).isEnabled()) {
-						clickCasilla(pos);
-					}
-				}
-			}
-		}
+	public void mostrarCasilla(int posicion, String bombas) {
+		((AbstractButton) panelCentral.getComponent(posicion)).setBackground(Color.green);
+		((AbstractButton) panelCentral.getComponent(posicion)).setEnabled(false);
+		((AbstractButton) panelCentral.getComponent(posicion)).setText(bombas);
+	}
+
+	public void mostrarBomba(int posicion) {
+		((AbstractButton) panelCentral.getComponent(posicion)).setBackground(Color.red);
+		((AbstractButton) panelCentral.getComponent(posicion)).setEnabled(false);
+		((AbstractButton) panelCentral.getComponent(posicion)).setIcon(new ImageIcon("image\\mina15.png"));
+	}
+
+	public void mostrarMensaje(String mensaje) {
+		javax.swing.JOptionPane.showMessageDialog(this, mensaje);
 	}
 }

@@ -1,16 +1,20 @@
 package Modelo;
 
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
+import Controlador.Main;
 
 
 
 public class Partida {
 	private int ancho;
 	private int alto;
-	private int[] minas;
+	private Map<Integer, Integer> minas;
+	private Map<Integer, Integer> posAbiertas;
 	private static Partida mPartida;
 	
 	
@@ -19,6 +23,7 @@ public class Partida {
 		super();
 		this.ancho = ancho;
 		this.alto = alto;
+		posAbiertas = new HashMap<Integer, Integer>();
 		generarMinas(cantidad);
 	}
 	/**
@@ -35,48 +40,30 @@ public class Partida {
 	}
 	
 	private void generarMinas(int cantidad) {
-		minas = new int[cantidad];
-		int casillas = this.ancho * this.alto;
+		minas = new HashMap<Integer, Integer>();
 		
-		//Llenamos el array de posiciones de mina con numeros aleatorios no repetidos
+		//Llenamos el mapa de posiciones de mina con numeros aleatorios no repetidos
 		int i = 0;
 		while (i < cantidad) {
-			int random = randInt(0, casillas - 1);
-			
-			boolean repetido = false;
-			for(int j = 0; j <= i && repetido == false; j++) {
-				if (random == minas[j]) {
-					repetido = true;
-				}
-			}
-			
-			if (!repetido) {
-				minas[i] = random;
-				i++;
-			}
+			int random;
+			random = randInt(0, getCantCasillas() - 1);
+			do {
+				random = randInt(0, getCantCasillas() - 1);
+			}while(minas.containsKey(random));
+			minas.put(random, 0);
+			i++;
 		}
-		
-		Arrays.sort(minas);
 	}
 	
 	private int randInt(int min, int max) {
+		//Obtenemos un numero para poner las bombas
 		Random rand = new Random();
         int randomNum = rand.nextInt((max - min) + 1) + min;
         return randomNum;
     }
 	
 	public void imprimirMinas() {
-		String m = "";
-		for (int i = 0; i < minas.length; i++) {
-			if(i == 0) {
-				m += minas[i];
-			}else {
-				m += ", " + minas[i];
-			}
-			
-		}
-		
-		javax.swing.JOptionPane.showMessageDialog(null, m);
+		//javax.swing.JOptionPane.showMessageDialog(null, m);
 	}
 
 	public int getAncho() {
@@ -87,7 +74,7 @@ public class Partida {
 		return alto;
 	}
 
-	public int[] getMinas() {
+	public Map<Integer, Integer> getMinas() {
 		return minas;
 	}
 	
@@ -96,89 +83,116 @@ public class Partida {
 	}
 	
 	public boolean esBomba(int posicion) {
-		boolean esBomba = false;
-		
-		int posicionArray = Arrays.binarySearch(minas, posicion);
-		if(posicionArray >= 0) {
-			esBomba = true;
-		}
-		
-		return esBomba;
+		return minas.containsKey(posicion);
 	}
 	
-	public List<Integer> calcularCasillas(int posicion) {
-		List<Integer> casillasMostrar = new LinkedList<Integer>();
-		int bombasCerca = 0;
-		
-		int posCont[] = { posicion - ancho - 1, posicion - ancho,
-				posicion - ancho + 1, posicion - 1, posicion + 1,
-				posicion + ancho - 1, posicion + ancho,
-				posicion + ancho + 1 };
-
-		if (!(posCont[0] < 0 || posCont[0] / ancho < posCont[1] / ancho)) {
-			casillasMostrar.add(posCont[0]);
-			if(esBomba(posCont[0])) {
-				bombasCerca++;
+	public void calcularCasillas(int posicion) {
+		//COmprobamos si la casilla seleccionada es una bomba
+		if(esBomba(posicion)) {
+			//Mostramos todas las bombas
+			minas.forEach((k,v) -> {
+				Main.vb.mostrarBomba(k);
+			});
+			//Avisamos de que ha explotado la bomba
+			Main.vb.mostrarMensaje("BOOOOOM!!!");
+		}else {
+			List<Integer> casillasMostrar = new LinkedList<>();
+			int bombasCerca = 0;
+			
+			//Calculamos las bombas al rededor de la casilla seleccionada
+			for(int i = (posicion/ancho) - 1; i <= (posicion/ancho) + 1; i++) {
+				for(int j = (posicion%ancho) - 1; j <= (posicion%ancho) + 1; j++) {
+					//Comprobamos que la casilla sea valida y que no ha sido ya seleccionada
+					if(i >= 0 && i <= alto - 1 && j >= 0 && j <= ancho - 1 && (i * alto) + j != posicion) {
+						//Guardamos la casilla para mostrarla si no se encuentran bombas
+						casillasMostrar.add((i * ancho) + j);
+						//Actualizamos el ontador de bombas si es una bomba
+						if(esBomba((i * ancho) + j)) {
+							bombasCerca++;
+						}
+					}
+				}
+			}
+			
+			if(bombasCerca == 0) {
+				//Si no hay bombas cerca mostramos la casilla y abrimos las adyacentes
+				Main.vb.mostrarCasilla(posicion, "");
+				posAbiertas.put(posicion, null);
+				for (int i : casillasMostrar) {
+					if(!posAbiertas.containsKey(i)) {
+						calcularCasillas(i);
+					}
+				}
+			}else{
+				//Mostramos la casilla con el numero de bombas adyacentes
+				Main.vb.mostrarCasilla(posicion, "" + bombasCerca);
 			}
 		}
-
-		if (!(posCont[1] < 0)) {
-			casillasMostrar.add(posCont[1]);
-			if(esBomba(posCont[1])) {
-				bombasCerca++;
-			}
-		}
-
-		if (!(posCont[2] < 0 || posCont[2] / ancho > posCont[1] / ancho)) {
-			casillasMostrar.add(posCont[2]);
-			if(esBomba(posCont[2])) {
-				bombasCerca++;
-			}
-		}
-
-		if (!(posCont[3] < 0 || posCont[3] / ancho < posicion / ancho)) {
-			casillasMostrar.add(posCont[3]);
-			if(esBomba(posCont[3])) {
-				bombasCerca++;
-			}
-		}
-
-		if (!(posCont[4] > getCantCasillas() - 1
-				|| posCont[4] / ancho > posicion / ancho)) {
-			casillasMostrar.add(posCont[4]);
-			if(esBomba(posCont[4])) {
-				bombasCerca++;
-			}
-		}
-
-		if (!(posCont[5] > getCantCasillas() - 1
-				|| posCont[5] / ancho < posCont[6] / ancho)) {
-			casillasMostrar.add(posCont[5]);
-			if(esBomba(posCont[5])) {
-				bombasCerca++;
-			}
-		}
-
-		if (!(posCont[6] > getCantCasillas() - 1)) {
-			casillasMostrar.add(posCont[6]);
-			if(esBomba(posCont[6])) {
-				bombasCerca++;
-			}
-		}
-
-		if (!(posCont[7] > getCantCasillas() - 1
-				|| posCont[7] / ancho > posCont[6] / ancho)) {
-			casillasMostrar.add(posCont[7]);
-			if(esBomba(posCont[7])) {
-				bombasCerca++;
-			}
-		}
-		
-		if(bombasCerca != 0) {
-			casillasMostrar = new LinkedList<Integer>();
-			casillasMostrar.add(bombasCerca);
-		}
-		
-		return casillasMostrar;
 	}
 }
+
+/*
+int posCont[] = { posicion - ancho - 1, posicion - ancho,
+					posicion - ancho + 1, posicion - 1, posicion + 1,
+					posicion + ancho - 1, posicion + ancho,
+					posicion + ancho + 1 };
+
+			if (!(posCont[0] < 0 || posCont[0] / ancho < posCont[1] / ancho)) {
+				casillasMostrar.add(posCont[0]);
+				if(esBomba(posCont[0])) {
+					bombasCerca++;
+				}
+			}
+
+			if (!(posCont[1] < 0)) {
+				casillasMostrar.add(posCont[1]);
+				if(esBomba(posCont[1])) {
+					bombasCerca++;
+				}
+			}
+
+			if (!(posCont[2] < 0 || posCont[2] / ancho > posCont[1] / ancho)) {
+				casillasMostrar.add(posCont[2]);
+				if(esBomba(posCont[2])) {
+					bombasCerca++;
+				}
+			}
+
+			if (!(posCont[3] < 0 || posCont[3] / ancho < posicion / ancho)) {
+				casillasMostrar.add(posCont[3]);
+				if(esBomba(posCont[3])) {
+					bombasCerca++;
+				}
+			}
+
+			if (!(posCont[4] > getCantCasillas() - 1
+					|| posCont[4] / ancho > posicion / ancho)) {
+				casillasMostrar.add(posCont[4]);
+				if(esBomba(posCont[4])) {
+					bombasCerca++;
+				}
+			}
+
+			if (!(posCont[5] > getCantCasillas() - 1
+					|| posCont[5] / ancho < posCont[6] / ancho)) {
+				casillasMostrar.add(posCont[5]);
+				if(esBomba(posCont[5])) {
+					bombasCerca++;
+				}
+			}
+
+			if (!(posCont[6] > getCantCasillas() - 1)) {
+				casillasMostrar.add(posCont[6]);
+				if(esBomba(posCont[6])) {
+					bombasCerca++;
+				}
+			}
+
+			if (!(posCont[7] > getCantCasillas() - 1
+					|| posCont[7] / ancho > posCont[6] / ancho)) {
+				casillasMostrar.add(posCont[7]);
+				if(esBomba(posCont[7])) {
+					bombasCerca++;
+				}
+			}
+*/

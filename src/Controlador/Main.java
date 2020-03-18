@@ -4,7 +4,7 @@ import Modelo.Partida;
 import Vista.VentanaBuscaminas;
 
 public class Main {
-	private static VentanaBuscaminas vb;
+	public static VentanaBuscaminas vb;
 	public static Partida partida;
 
 	public static void main(String[] args) {
@@ -22,6 +22,9 @@ public class Main {
 			partida = Partida.getPartida(10, 20, 25);
 			break;
 		case 2:
+			partida = Partida.getPartida(20, 10, 25);
+			break;
+		case 3:
 			partida = Partida.getPartida(20, 20, 50);
 			break;
 		}
