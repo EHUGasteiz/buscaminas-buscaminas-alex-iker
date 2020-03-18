@@ -63,7 +63,13 @@ public class Partida {
     }
 	
 	public void imprimirMinas() {
-		//javax.swing.JOptionPane.showMessageDialog(null, m);
+		List<Integer> m = new LinkedList<>();
+		
+		minas.forEach((k,v) -> {
+			m.add(k);
+		});
+		
+		javax.swing.JOptionPane.showMessageDialog(null, m.toString());
 	}
 
 	public int getAncho() {
@@ -130,69 +136,3 @@ public class Partida {
 		}
 	}
 }
-
-/*
-int posCont[] = { posicion - ancho - 1, posicion - ancho,
-					posicion - ancho + 1, posicion - 1, posicion + 1,
-					posicion + ancho - 1, posicion + ancho,
-					posicion + ancho + 1 };
-
-			if (!(posCont[0] < 0 || posCont[0] / ancho < posCont[1] / ancho)) {
-				casillasMostrar.add(posCont[0]);
-				if(esBomba(posCont[0])) {
-					bombasCerca++;
-				}
-			}
-
-			if (!(posCont[1] < 0)) {
-				casillasMostrar.add(posCont[1]);
-				if(esBomba(posCont[1])) {
-					bombasCerca++;
-				}
-			}
-
-			if (!(posCont[2] < 0 || posCont[2] / ancho > posCont[1] / ancho)) {
-				casillasMostrar.add(posCont[2]);
-				if(esBomba(posCont[2])) {
-					bombasCerca++;
-				}
-			}
-
-			if (!(posCont[3] < 0 || posCont[3] / ancho < posicion / ancho)) {
-				casillasMostrar.add(posCont[3]);
-				if(esBomba(posCont[3])) {
-					bombasCerca++;
-				}
-			}
-
-			if (!(posCont[4] > getCantCasillas() - 1
-					|| posCont[4] / ancho > posicion / ancho)) {
-				casillasMostrar.add(posCont[4]);
-				if(esBomba(posCont[4])) {
-					bombasCerca++;
-				}
-			}
-
-			if (!(posCont[5] > getCantCasillas() - 1
-					|| posCont[5] / ancho < posCont[6] / ancho)) {
-				casillasMostrar.add(posCont[5]);
-				if(esBomba(posCont[5])) {
-					bombasCerca++;
-				}
-			}
-
-			if (!(posCont[6] > getCantCasillas() - 1)) {
-				casillasMostrar.add(posCont[6]);
-				if(esBomba(posCont[6])) {
-					bombasCerca++;
-				}
-			}
-
-			if (!(posCont[7] > getCantCasillas() - 1
-					|| posCont[7] / ancho > posCont[6] / ancho)) {
-				casillasMostrar.add(posCont[7]);
-				if(esBomba(posCont[7])) {
-					bombasCerca++;
-				}
-			}
-*/
