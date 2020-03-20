@@ -79,16 +79,12 @@ public class Partida {
 	public int getAlto() {
 		return alto;
 	}
-
-	public Map<Integer, Integer> getMinas() {
-		return minas;
-	}
 	
 	public int getCantCasillas() {
 		return ancho * alto;
 	}
 	
-	public boolean esBomba(int posicion) {
+	private boolean esBomba(int posicion) {
 		return minas.containsKey(posicion);
 	}
 	
