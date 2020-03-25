@@ -11,14 +11,17 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import Controlador.Main;
+import Modelo.DatosObserver;
 
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 
-public class VentanaBuscaminas extends JFrame {
+public class VentanaBuscaminas extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -98,5 +101,22 @@ public class VentanaBuscaminas extends JFrame {
 
 	public void mostrarMensaje(String mensaje) {
 		javax.swing.JOptionPane.showMessageDialog(this, mensaje);
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		DatosObserver data = (DatosObserver) arg;
+
+		switch (data.getAccion()) {
+		case 0:
+			mostrarBomba(data.getPosicion());
+			break;
+		case 1:
+			mostrarCasilla(data.getPosicion(), data.getTexto());
+			break;
+		case 2:
+			mostrarMensaje(data.getTexto());
+			break;
+		}
 	}
 }

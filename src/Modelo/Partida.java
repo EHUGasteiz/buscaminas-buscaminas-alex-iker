@@ -4,13 +4,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 import java.util.Random;
 
 import Controlador.Main;
 
-
-
-public class Partida {
+public class Partida extends Observable{
 	private int ancho;
 	private int alto;
 	private Map<Integer, Integer> minas;
@@ -93,10 +92,12 @@ public class Partida {
 		if(esBomba(posicion)) {
 			//Mostramos todas las bombas
 			minas.forEach((k,v) -> {
-				Main.vb.mostrarBomba(k);
+				setChanged();
+				notifyObservers(new DatosObserver(0,k,null));
 			});
 			//Avisamos de que ha explotado la bomba
-			Main.vb.mostrarMensaje("BOOOOOM!!!");
+			setChanged();
+			notifyObservers(new DatosObserver(2,-1,"BOOOOOM!!!"));
 		}else {
 			List<Integer> casillasMostrar = new LinkedList<>();
 			int bombasCerca = 0;
@@ -118,7 +119,8 @@ public class Partida {
 			
 			if(bombasCerca == 0) {
 				//Si no hay bombas cerca mostramos la casilla y abrimos las adyacentes
-				Main.vb.mostrarCasilla(posicion, "");
+				setChanged();
+				notifyObservers(new DatosObserver(1, posicion, null));
 				posAbiertas.put(posicion, null);
 				for (int i : casillasMostrar) {
 					if(!posAbiertas.containsKey(i)) {
@@ -127,7 +129,8 @@ public class Partida {
 				}
 			}else{
 				//Mostramos la casilla con el numero de bombas adyacentes
-				Main.vb.mostrarCasilla(posicion, "" + bombasCerca);
+				setChanged();
+				notifyObservers(new DatosObserver(1, posicion, "" + bombasCerca));
 			}
 		}
 	}

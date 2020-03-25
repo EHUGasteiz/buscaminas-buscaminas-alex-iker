@@ -38,6 +38,8 @@ public class Main {
 		//Creamos la ventana del tablero del buscaminas
 		vb = new VentanaBuscaminas();
 		
+		partida.addObserver(vb);
+		
 		vb.setBounds(100, 100, partida.getAncho() * 30, partida.getAlto() * 30);
 		
 		//Lo mostramos
