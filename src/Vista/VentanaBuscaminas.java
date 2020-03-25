@@ -87,19 +87,19 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 		}
 	}
 
-	public void mostrarCasilla(int posicion, String bombas) {
+	private void mostrarCasilla(int posicion, String bombas) {
 		((AbstractButton) panelCentral.getComponent(posicion)).setBackground(Color.green);
 		((AbstractButton) panelCentral.getComponent(posicion)).setEnabled(false);
 		((AbstractButton) panelCentral.getComponent(posicion)).setText(bombas);
 	}
 
-	public void mostrarBomba(int posicion) {
+	private void mostrarBomba(int posicion) {
 		((AbstractButton) panelCentral.getComponent(posicion)).setBackground(Color.red);
 		((AbstractButton) panelCentral.getComponent(posicion)).setEnabled(false);
 		((AbstractButton) panelCentral.getComponent(posicion)).setIcon(new ImageIcon("image\\mina15.png"));
 	}
 
-	public void mostrarMensaje(String mensaje) {
+	private void mostrarMensaje(String mensaje) {
 		javax.swing.JOptionPane.showMessageDialog(this, mensaje);
 	}
 
