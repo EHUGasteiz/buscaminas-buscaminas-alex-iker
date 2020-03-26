@@ -83,6 +83,10 @@ public class Partida extends Observable{
 		return ancho * alto;
 	}
 	
+	public int getCantMinas() {
+		return minas.size();
+	}
+	
 	private boolean esBomba(int posicion) {
 		return minas.containsKey(posicion);
 	}

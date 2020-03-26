@@ -40,7 +40,7 @@ public class Main {
 		
 		partida.addObserver(vb);
 		
-		vb.setBounds(100, 100, partida.getAncho() * 30, partida.getAlto() * 30);
+		vb.setBounds(100, 100, partida.getAncho() * 30, partida.getAlto() * 30 + 50);
 		
 		//Lo mostramos
 		vb.setVisible(true);

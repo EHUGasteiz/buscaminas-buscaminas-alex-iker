@@ -20,12 +20,21 @@ import java.util.Observable;
 import java.util.Observer;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class VentanaBuscaminas extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private static JPanel panelCentral;
+	private JPanel panelCabecera;
+	private JPanel panelCabIzq;
+	private JPanel panelCabCent;
+	private JPanel panelCabDer;
+	private JButton btnReinicio;
+	private JLabel contadorMinas;
+	private JLabel contadorBanderas;
 
 	/**
 	 * Launch the application.
@@ -58,6 +67,7 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		contentPane.add(getPanelCentral(), BorderLayout.CENTER);
+		contentPane.add(getPanelCabecera(), BorderLayout.NORTH);
 		crearTablero();
 	}
 
@@ -67,6 +77,68 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 			panelCentral.setLayout(new GridLayout(1, 0, 0, 0));
 		}
 		return panelCentral;
+	}
+
+	private JLabel getContadorMinas() {
+		if (contadorMinas == null) {
+			contadorMinas = new JLabel("0");
+			contadorMinas.setIcon(new ImageIcon("image\\mina20.png"));
+		}
+		return contadorMinas;
+	}
+
+	private JLabel getContadorBanderas() {
+		if (contadorBanderas == null) {
+			contadorBanderas = new JLabel("0");
+			contadorBanderas.setHorizontalAlignment(SwingConstants.LEFT);
+			contadorBanderas.setHorizontalTextPosition(SwingConstants.LEFT);
+			contadorBanderas.setIcon(new ImageIcon("image\\bandera20.png"));
+		}
+		return contadorBanderas;
+	}
+
+	private JPanel getPanelCabecera() {
+		if (panelCabecera == null) {
+			panelCabecera = new JPanel();
+			panelCabecera.setLayout(new BorderLayout(0, 0));
+			panelCabecera.add(getPanelCabIzq(), BorderLayout.WEST);
+			panelCabecera.add(getPanelCabCent(), BorderLayout.CENTER);
+			panelCabecera.add(getPanelCabDer(), BorderLayout.EAST);
+		}
+		return panelCabecera;
+	}
+
+	private JPanel getPanelCabIzq() {
+		if (panelCabIzq == null) {
+			panelCabIzq = new JPanel();
+			panelCabIzq.add(getContadorMinas());
+		}
+		return panelCabIzq;
+	}
+
+	private JPanel getPanelCabCent() {
+		if (panelCabCent == null) {
+			panelCabCent = new JPanel();
+			panelCabCent.add(getBtnReinicio());
+		}
+		return panelCabCent;
+	}
+
+	private JPanel getPanelCabDer() {
+		if (panelCabDer == null) {
+			panelCabDer = new JPanel();
+			panelCabDer.add(getContadorBanderas());
+		}
+		return panelCabDer;
+	}
+
+	private JButton getBtnReinicio() {
+		if (btnReinicio == null) {
+			btnReinicio = new JButton("");
+			btnReinicio.setMargin(new Insets(1, 1, 1, 1));
+			btnReinicio.setIcon(new ImageIcon("image\\confuso20.png"));
+		}
+		return btnReinicio;
 	}
 
 	private void crearTablero() {
@@ -85,6 +157,8 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 			});
 			panelCentral.add(btn);
 		}
+
+		contadorMinas.setText("" + Main.partida.getCantMinas());
 	}
 
 	private void mostrarCasilla(int posicion, String bombas) {
@@ -109,6 +183,7 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 
 		switch (data.getAccion()) {
 		case 0:
+			partidaPerdida();
 			mostrarBomba(data.getPosicion());
 			break;
 		case 1:
@@ -117,6 +192,18 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 		case 2:
 			mostrarMensaje(data.getTexto());
 			break;
+		case 3:
+			partidaGanada();
+			mostrarMensaje("Enhorabuena!!!");
+			break;
 		}
+	}
+
+	private void partidaGanada() {
+		btnReinicio.setIcon(new ImageIcon("image\\sonreir20.png"));
+	}
+
+	private void partidaPerdida() {
+		btnReinicio.setIcon(new ImageIcon("image\\triste20.png"));
 	}
 }
