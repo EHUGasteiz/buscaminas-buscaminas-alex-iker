@@ -22,6 +22,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class VentanaBuscaminas extends JFrame implements Observer {
 
@@ -137,6 +139,11 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 			btnReinicio = new JButton("");
 			btnReinicio.setMargin(new Insets(1, 1, 1, 1));
 			btnReinicio.setIcon(new ImageIcon("image\\confuso20.png"));
+			btnReinicio.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					// implementar reinicio del juego
+				}
+			});
 		}
 		return btnReinicio;
 	}
@@ -152,7 +159,15 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 			btn.setMargin(new Insets(1, 1, 1, 1));
 			btn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Main.partida.calcularCasillas(numCasilla);
+					Main.partida.clickCasilla(numCasilla);
+				}
+			});
+			btn.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					if (arg0.getButton() == MouseEvent.BUTTON3) {
+						Main.partida.clickBandera(numCasilla);
+					}
 				}
 			});
 			panelCentral.add(btn);
@@ -174,7 +189,19 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 	}
 
 	private void mostrarMensaje(String mensaje) {
-		javax.swing.JOptionPane.showMessageDialog(this, mensaje);
+		// javax.swing.JOptionPane.showMessageDialog(this, mensaje);
+		// int opc = javax.swing.JOptionPane.showConfirmDialog(this, mensaje +
+		// "\n¿Quieres empezar una partida nueva?");
+
+		JFrame frame = new JFrame();
+		String[] opt = new String[2];
+		opt[0] = new String("Nueva partida");
+		opt[1] = new String("Ver panel");
+		int opc = javax.swing.JOptionPane.showOptionDialog(this, mensaje, "¿Que deseas hacer?", 0,
+				javax.swing.JOptionPane.INFORMATION_MESSAGE, null, opt, null);
+		if (opc == 0) {
+			// implementar reinicio del juego
+		}
 	}
 
 	@Override
@@ -196,6 +223,14 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 			partidaGanada();
 			mostrarMensaje("Enhorabuena!!!");
 			break;
+		case 4:
+			ponerBandera(data.getPosicion());
+			contadorBanderas.setText(data.getTexto());
+			break;
+		case 5:
+			quitarBandera(data.getPosicion());
+			contadorBanderas.setText(data.getTexto());
+			break;
 		}
 	}
 
@@ -205,5 +240,13 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 
 	private void partidaPerdida() {
 		btnReinicio.setIcon(new ImageIcon("image\\triste20.png"));
+	}
+
+	private void ponerBandera(int posicion) {
+		((AbstractButton) panelCentral.getComponent(posicion)).setIcon(new ImageIcon("image\\bandera15.png"));
+	}
+
+	private void quitarBandera(int posicion) {
+		((AbstractButton) panelCentral.getComponent(posicion)).setIcon(null);
 	}
 }

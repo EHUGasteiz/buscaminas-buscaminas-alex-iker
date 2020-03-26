@@ -14,6 +14,7 @@ public class Partida extends Observable{
 	private int alto;
 	private Map<Integer, Integer> minas;
 	private Map<Integer, Integer> posAbiertas;
+	private Map<Integer, Integer> banderas;
 	private static Partida mPartida;
 	
 	
@@ -23,6 +24,7 @@ public class Partida extends Observable{
 		this.ancho = ancho;
 		this.alto = alto;
 		posAbiertas = new HashMap<Integer, Integer>();
+		banderas = new HashMap<Integer, Integer>();
 		generarMinas(cantidad);
 	}
 	/**
@@ -91,51 +93,75 @@ public class Partida extends Observable{
 		return minas.containsKey(posicion);
 	}
 	
-	public void calcularCasillas(int posicion) {
-		//COmprobamos si la casilla seleccionada es una bomba
-		if(esBomba(posicion)) {
-			//Mostramos todas las bombas
-			minas.forEach((k,v) -> {
-				setChanged();
-				notifyObservers(new DatosObserver(0,k,null));
-			});
-			//Avisamos de que ha explotado la bomba
+	public void clickCasilla(int posicion) {
+		calcularCasillas(posicion);
+		if(posAbiertas.size() == getCantCasillas() - minas.size()) {
 			setChanged();
-			notifyObservers(new DatosObserver(2,-1,"BOOOOOM!!!"));
-		}else {
-			List<Integer> casillasMostrar = new LinkedList<>();
-			int bombasCerca = 0;
-			
-			//Calculamos las bombas al rededor de la casilla seleccionada
-			for(int i = (posicion/ancho) - 1; i <= (posicion/ancho) + 1; i++) {
-				for(int j = (posicion%ancho) - 1; j <= (posicion%ancho) + 1; j++) {
-					//Comprobamos que la casilla sea valida y que no ha sido ya seleccionada
-					if(i >= 0 && i <= alto - 1 && j >= 0 && j <= ancho - 1 && (i * alto) + j != posicion) {
-						//Guardamos la casilla para mostrarla si no se encuentran bombas
-						casillasMostrar.add((i * ancho) + j);
-						//Actualizamos el ontador de bombas si es una bomba
-						if(esBomba((i * ancho) + j)) {
-							bombasCerca++;
+			notifyObservers(new DatosObserver(3,-1,null));
+		}
+	}
+	
+	private void calcularCasillas(int posicion) {
+		//Comprobamos si la casilla seleccionada no es una bandera
+		if(!banderas.containsKey(posicion)) {
+			//Comprobamos si la casilla seleccionada es una bomba
+			if(esBomba(posicion)) {
+				//Mostramos todas las bombas
+				minas.forEach((k,v) -> {
+					setChanged();
+					notifyObservers(new DatosObserver(0,k,null));
+				});
+				//Avisamos de que ha explotado la bomba
+				setChanged();
+				notifyObservers(new DatosObserver(2,-1,"BOOOOOM!!!"));
+			}else {
+				List<Integer> casillasMostrar = new LinkedList<>();
+				int bombasCerca = 0;
+				
+				//Calculamos las bombas al rededor de la casilla seleccionada
+				for(int i = (posicion/ancho) - 1; i <= (posicion/ancho) + 1; i++) {
+					for(int j = (posicion%ancho) - 1; j <= (posicion%ancho) + 1; j++) {
+						//Comprobamos que la casilla sea valida y que no ha sido ya seleccionada
+						if(i >= 0 && i <= alto - 1 && j >= 0 && j <= ancho - 1 && (i * alto) + j != posicion) {
+							//Guardamos la casilla para mostrarla si no se encuentran bombas
+							casillasMostrar.add((i * ancho) + j);
+							//Actualizamos el ontador de bombas si es una bomba
+							if(esBomba((i * ancho) + j)) {
+								bombasCerca++;
+							}
 						}
 					}
 				}
-			}
-			
-			if(bombasCerca == 0) {
-				//Si no hay bombas cerca mostramos la casilla y abrimos las adyacentes
-				setChanged();
-				notifyObservers(new DatosObserver(1, posicion, null));
+				
 				posAbiertas.put(posicion, null);
-				for (int i : casillasMostrar) {
-					if(!posAbiertas.containsKey(i)) {
-						calcularCasillas(i);
+				
+				if(bombasCerca == 0) {
+					//Si no hay bombas cerca mostramos la casilla y abrimos las adyacentes
+					setChanged();
+					notifyObservers(new DatosObserver(1, posicion, null));
+					for (int i : casillasMostrar) {
+						if(!posAbiertas.containsKey(i)) {
+							calcularCasillas(i);
+						}
 					}
+				}else{
+					//Mostramos la casilla con el numero de bombas adyacentes
+					setChanged();
+					notifyObservers(new DatosObserver(1, posicion, "" + bombasCerca));
 				}
-			}else{
-				//Mostramos la casilla con el numero de bombas adyacentes
-				setChanged();
-				notifyObservers(new DatosObserver(1, posicion, "" + bombasCerca));
-			}
+			}	
+		}
+	}
+	
+	public void clickBandera(int posicion) {
+		if(banderas.containsKey(posicion)) {
+			banderas.remove(posicion);
+			setChanged();
+			notifyObservers(new DatosObserver(5, posicion, "" + banderas.size()));
+		}else {
+			banderas.put(posicion, null);
+			setChanged();
+			notifyObservers(new DatosObserver(4, posicion, "" + banderas.size()));
 		}
 	}
 }
