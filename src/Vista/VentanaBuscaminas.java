@@ -193,7 +193,6 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 		// int opc = javax.swing.JOptionPane.showConfirmDialog(this, mensaje +
 		// "\n¿Quieres empezar una partida nueva?");
 
-		JFrame frame = new JFrame();
 		String[] opt = new String[2];
 		opt[0] = new String("Nueva partida");
 		opt[1] = new String("Ver panel");
