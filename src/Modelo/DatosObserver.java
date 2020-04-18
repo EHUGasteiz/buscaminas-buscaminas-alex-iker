@@ -4,7 +4,7 @@ public class DatosObserver {
 	private int accion;
 	private int posicion;
 	private String texto;
-	
+
 	public DatosObserver(int accion, int posicion, String texto) {
 		super();
 		this.accion = accion;

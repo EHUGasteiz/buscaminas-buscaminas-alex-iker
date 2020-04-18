@@ -12,7 +12,7 @@ public class MainTest {
 	
 	
 	@BeforeEach
-	void setUp() throws Exception {
+	public void setUp() throws Exception {
 		
 	}
 

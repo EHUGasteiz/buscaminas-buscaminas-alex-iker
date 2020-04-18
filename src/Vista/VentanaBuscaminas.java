@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 
 import Controlador.Main;
 import Modelo.DatosObserver;
+import Modelo.Partida;
 
 import java.awt.GridLayout;
 import java.awt.Insets;
@@ -141,7 +142,8 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 			btnReinicio.setIcon(new ImageIcon("image\\confuso20.png"));
 			btnReinicio.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					// implementar reinicio del juego
+					// Reinicio del juego
+					Main.cargar();
 				}
 			});
 		}
@@ -149,6 +151,7 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 	}
 
 	private void crearTablero() {
+		panelCentral.removeAll();
 		if (Main.partida.getAlto() > 0) {
 			panelCentral.setLayout(new GridLayout(Main.partida.getAlto(), Main.partida.getAncho(), 0, 0));
 		}
@@ -199,7 +202,8 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 		int opc = javax.swing.JOptionPane.showOptionDialog(this, mensaje, "¿Que deseas hacer?", 0,
 				javax.swing.JOptionPane.INFORMATION_MESSAGE, null, opt, null);
 		if (opc == 0) {
-			// implementar reinicio del juego
+			// Reinicio del juego
+			Main.cargar();
 		}
 	}
 

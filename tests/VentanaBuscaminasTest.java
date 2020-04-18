@@ -6,12 +6,37 @@ import org.junit.jupiter.api.Test;
 class VentanaBuscaminasTest {
 
 	@BeforeEach
-	void setUp() throws Exception {
+	public void setUp() throws Exception {
 	}
 
 	@Test
-	void test() {
-		fail("Not yet implemented");
+	public void testVentanaBuscaminas() {
+		
 	}
+	@Test
+	public void testInitialize() {
+		
+	}
+	@Test
+	public void testGetPanelCentral() {
+		
+	}
+	@Test
+	public void testCrearTablero() {
+		
+	}
+	@Test
+	public void testMostrarCasilla() {
+		
+	}
+	@Test
+	public void testMostrarBomba() {
+		
+	}
+	@Test
+	public void testMostrarMensaje() {
+		
+	}
+	
 
 }
