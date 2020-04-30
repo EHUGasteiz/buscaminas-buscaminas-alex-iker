@@ -12,6 +12,8 @@ import Controlador.Main;
 public class Partida extends Observable {
 	private int ancho;
 	private int alto;
+	private static int dificultad;
+	private static String nombre;
 	private Map<Integer, Integer> minas;
 	private Map<Integer, Integer> posAbiertas;
 	private Map<Integer, Integer> banderas;
@@ -32,14 +34,26 @@ public class Partida extends Observable {
 	 * 
 	 * @return la instancia unica
 	 */
-	public static Partida getPartida(int ancho, int alto, int cantidad) {
-
-		mPartida = new Partida(ancho, alto, cantidad);
+	public static Partida getPartida(String pNombre,int pDificultad) {
+		dificultad = pDificultad;
+		nombre = pNombre;
+		switch (pDificultad) {
+		case 1:
+			mPartida = new Partida(10, 10, 10);
+			break;
+		case 2:
+			mPartida =  new Partida(15, 15, 25);
+			break;
+		case 3:
+			mPartida =  new Partida(20, 20, 50);
+			break;
+		}
+		
 
 		return mPartida;
 	}
 
-	private void generarMinas(int cantidad) {
+	public void generarMinas(int cantidad) {
 		minas = new HashMap<Integer, Integer>();
 
 		// Llenamos el mapa de posiciones de mina con numeros aleatorios no repetidos
@@ -87,6 +101,15 @@ public class Partida extends Observable {
 	public int getCantMinas() {
 		return minas.size();
 	}
+	
+	public Map<Integer, Integer> getMinas(){
+		return minas;
+	}
+	
+	public Map<Integer, Integer> getBanderas(){
+		return banderas;
+	}
+	
 
 	private boolean esBomba(int posicion) {
 		return minas.containsKey(posicion);
@@ -162,5 +185,11 @@ public class Partida extends Observable {
 			setChanged();
 			notifyObservers(new DatosObserver(4, posicion, "" + banderas.size()));
 		}
+	}
+	public int getDificultad() {
+		return dificultad;
+	}
+	public String getNombre() {
+		return nombre;
 	}
 }
