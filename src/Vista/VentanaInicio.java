@@ -77,20 +77,18 @@ public class VentanaInicio extends JFrame {
 			btnAceptar = new JButton("Aceptar");
 			btnAceptar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					if (dificultad1.isSelected()) {
-						dispose();
-						Main.partida = Partida.getPartida(tfNombre.getText(),1);
-						Main.crearVentanaBuscaminas();
+					if (tfNombre.getText().isEmpty()) {
+						javax.swing.JOptionPane.showMessageDialog(VentanaInicio.this, "Debes elegir un nombre");
+					}
+					else if (dificultad1.isSelected()) {
+						Main.iniciar(tfNombre.getText(),1);
 					} else if (dificultad2.isSelected()) {
-						dispose();
-						Main.partida = Partida.getPartida(tfNombre.getText(),2);
-						Main.crearVentanaBuscaminas();
+						Main.iniciar(tfNombre.getText(),2);
 					} else if (dificultad3.isSelected()) {
-						dispose();
-						Main.partida = Partida.getPartida(tfNombre.getText(),3);
-						Main.crearVentanaBuscaminas();
-					} else {
-						javax.swing.JOptionPane.showMessageDialog(VentanaInicio.this, "Debes elegir un tamaño");
+						Main.iniciar(tfNombre.getText(),3);
+					}  
+					else {
+						javax.swing.JOptionPane.showMessageDialog(VentanaInicio.this, "Debes elegir una dificultad");
 					}
 				}
 			});
@@ -164,10 +162,10 @@ public class VentanaInicio extends JFrame {
 
 	private JRadioButton getRbDificultad3() {
 		if (dificultad3 == null) {
-			dificultad2 = new JRadioButton("Dificultad 3");
-			buttonGroup.add(dificultad2);
+			dificultad3 = new JRadioButton("Dificultad 3");
+			buttonGroup.add(dificultad3);
 		}
-		return dificultad2;
+		return dificultad3;
 	
 	}
 	

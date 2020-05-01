@@ -42,7 +42,7 @@ public class Partida extends Observable {
 			mPartida = new Partida(10, 10, 10);
 			break;
 		case 2:
-			mPartida =  new Partida(15, 15, 25);
+			mPartida =  new Partida(20, 10, 25);
 			break;
 		case 3:
 			mPartida =  new Partida(20, 20, 50);
