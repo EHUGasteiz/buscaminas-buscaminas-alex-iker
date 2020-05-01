@@ -12,7 +12,6 @@ import javax.swing.border.EmptyBorder;
 
 import Controlador.Main;
 import Modelo.DatosObserver;
-import Modelo.Partida;
 
 import java.awt.GridLayout;
 import java.awt.Insets;
@@ -38,6 +37,8 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 	private JButton btnReinicio;
 	private JLabel contadorMinas;
 	private JLabel contadorBanderas;
+	private JPanel panel;
+	private JLabel puntuacion;
 
 	/**
 	 * Launch the application.
@@ -107,6 +108,7 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 			panelCabecera.add(getPanelCabIzq(), BorderLayout.WEST);
 			panelCabecera.add(getPanelCabCent(), BorderLayout.CENTER);
 			panelCabecera.add(getPanelCabDer(), BorderLayout.EAST);
+			panelCabecera.add(getPanel(), BorderLayout.NORTH);
 		}
 		return panelCabecera;
 	}
@@ -196,14 +198,23 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 		// int opc = javax.swing.JOptionPane.showConfirmDialog(this, mensaje +
 		// "\n¿Quieres empezar una partida nueva?");
 
-		String[] opt = new String[2];
+		String[] opt = new String[3];
 		opt[0] = new String("Nueva partida");
 		opt[1] = new String("Ver panel");
+		opt[2] = new String("Puntuaciones");
 		int opc = javax.swing.JOptionPane.showOptionDialog(this, mensaje, "¿Que deseas hacer?", 0,
 				javax.swing.JOptionPane.INFORMATION_MESSAGE, null, opt, null);
-		if (opc == 0) {
+		
+		switch (opc) {
+		case 0:
 			// Reinicio del juego
 			Main.cargar();
+			break;
+
+		case 2:
+			//Mostrar puntuaciones
+			Main.mostrarPuntuaciones(false);
+			break;
 		}
 	}
 
@@ -234,6 +245,9 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 			quitarBandera(data.getPosicion());
 			contadorBanderas.setText(data.getTexto());
 			break;
+		case 6:
+			puntuacion.setText(Main.partida.getPuntuacion() + "");
+			break;
 		}
 	}
 
@@ -251,5 +265,18 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 
 	private void quitarBandera(int posicion) {
 		((AbstractButton) panelCentral.getComponent(posicion)).setIcon(null);
+	}
+	private JPanel getPanel() {
+		if (panel == null) {
+			panel = new JPanel();
+			panel.add(getPuntuacion());
+		}
+		return panel;
+	}
+	private JLabel getPuntuacion() {
+		if (puntuacion == null) {
+			puntuacion = new JLabel("0");
+		}
+		return puntuacion;
 	}
 }

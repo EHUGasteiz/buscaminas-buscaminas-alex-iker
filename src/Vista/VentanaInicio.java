@@ -1,31 +1,30 @@
 package Vista;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.border.EmptyBorder;
 
 import Controlador.Main;
-import Modelo.Partida;
-import Vista.VentanaBuscaminas;
 
 
 public class VentanaInicio extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPanel panel;
 	private JButton btnAceptar;
@@ -39,6 +38,7 @@ public class VentanaInicio extends JFrame {
 	private JRadioButton dificultad2;
 	private JRadioButton dificultad3;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JButton btnPuntuacion;
 	
 	
 
@@ -66,6 +66,7 @@ public class VentanaInicio extends JFrame {
 			panel = new JPanel();
 			panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 			panel.add(getBtnAceptar());
+			panel.add(getBtnPuntuacion());
 			
 		}
 		return panel;
@@ -113,8 +114,8 @@ public class VentanaInicio extends JFrame {
 	private JLabel getLblNewLabel() {
 		if (lblNewLabel == null) {
 			lblNewLabel = new JLabel("Nombre:");
-			sl_panel.putConstraint(SpringLayout.NORTH, lblNewLabel, 5, SpringLayout.NORTH, getPanel_1());
 			sl_panel.putConstraint(SpringLayout.WEST, lblNewLabel, 62, SpringLayout.WEST, getPanel_1());
+			sl_panel.putConstraint(SpringLayout.EAST, lblNewLabel, 140, SpringLayout.WEST, getPanel_1());
 		}
 		return lblNewLabel;
 	}
@@ -122,10 +123,10 @@ public class VentanaInicio extends JFrame {
 	private JTextField getTfNombre() {
 		if (tfNombre == null) {
 			tfNombre = new JTextField();
-			sl_panel.putConstraint(SpringLayout.EAST, getLblNewLabel(), -14, SpringLayout.WEST, tfNombre);
-			sl_panel.putConstraint(SpringLayout.WEST, tfNombre, -270, SpringLayout.EAST, getPanel_1());
-			sl_panel.putConstraint(SpringLayout.EAST, tfNombre, -78, SpringLayout.EAST, getPanel_1());
-			sl_panel.putConstraint(SpringLayout.NORTH, tfNombre, 2, SpringLayout.NORTH, getPanel_1());
+			sl_panel.putConstraint(SpringLayout.WEST, tfNombre, 26, SpringLayout.EAST, getLblNewLabel());
+			sl_panel.putConstraint(SpringLayout.EAST, tfNombre, -66, SpringLayout.EAST, getPanel_1());
+			sl_panel.putConstraint(SpringLayout.NORTH, getLblNewLabel(), 3, SpringLayout.NORTH, tfNombre);
+			sl_panel.putConstraint(SpringLayout.NORTH, tfNombre, 10, SpringLayout.NORTH, getPanel_1());
 			tfNombre.setColumns(10);
 		}
 		return tfNombre;
@@ -134,10 +135,9 @@ public class VentanaInicio extends JFrame {
 	private JLabel getLblNewLabel_1() {
 		if (lblNewLabel_1 == null) {
 			lblNewLabel_1 = new JLabel("Dificultad:");
-			sl_panel.putConstraint(SpringLayout.NORTH, lblNewLabel_1, 20, SpringLayout.SOUTH, getLblNewLabel());
-			sl_panel.putConstraint(SpringLayout.WEST, lblNewLabel_1, 0, SpringLayout.WEST, getLblNewLabel());
-			sl_panel.putConstraint(SpringLayout.SOUTH, lblNewLabel_1, 34, SpringLayout.SOUTH, getLblNewLabel());
-			sl_panel.putConstraint(SpringLayout.EAST, lblNewLabel_1, -290, SpringLayout.EAST, getPanel_1());
+			sl_panel.putConstraint(SpringLayout.NORTH, lblNewLabel_1, 47, SpringLayout.SOUTH, getLblNewLabel());
+			sl_panel.putConstraint(SpringLayout.WEST, lblNewLabel_1, 62, SpringLayout.WEST, getPanel_1());
+			sl_panel.putConstraint(SpringLayout.SOUTH, lblNewLabel_1, -130, SpringLayout.SOUTH, getPanel_1());
 		}
 		return lblNewLabel_1;
 	}
@@ -172,9 +172,10 @@ public class VentanaInicio extends JFrame {
 	private JPanel getPanel3() {
 		if (panel_3 == null) {
 			panel_3 = new JPanel();
+			sl_panel.putConstraint(SpringLayout.EAST, getLblNewLabel_1(), -32, SpringLayout.WEST, panel_3);
+			sl_panel.putConstraint(SpringLayout.SOUTH, panel_3, 143, SpringLayout.NORTH, getPanel_1());
 			sl_panel.putConstraint(SpringLayout.NORTH, panel_3, 74, SpringLayout.NORTH, getPanel_1());
 			sl_panel.putConstraint(SpringLayout.WEST, panel_3, 166, SpringLayout.WEST, getPanel_1());
-			sl_panel.putConstraint(SpringLayout.SOUTH, panel_3, -75, SpringLayout.SOUTH, getPanel_1());
 			sl_panel.putConstraint(SpringLayout.EAST, panel_3, -166, SpringLayout.EAST, getPanel_1());
 			panel_3.setLayout(new GridLayout(0, 1, 0, 0));
 			panel_3.add(getRbDificultad1());
@@ -185,4 +186,15 @@ public class VentanaInicio extends JFrame {
 	}
 	
 	
+	private JButton getBtnPuntuacion() {
+		if (btnPuntuacion == null) {
+			btnPuntuacion = new JButton("Puntuaciones");
+			btnPuntuacion.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					Main.mostrarPuntuaciones(true);
+				}
+			});
+		}
+		return btnPuntuacion;
+	}
 }

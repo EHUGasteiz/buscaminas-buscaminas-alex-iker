@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import Controlador.Main;
 
@@ -14,6 +16,8 @@ public class Partida extends Observable {
 	private int alto;
 	private static int dificultad;
 	private static String nombre;
+	private int puntuacion;
+	private Timer timer;
 	private Map<Integer, Integer> minas;
 	private Map<Integer, Integer> posAbiertas;
 	private Map<Integer, Integer> banderas;
@@ -24,6 +28,17 @@ public class Partida extends Observable {
 		super();
 		this.ancho = ancho;
 		this.alto = alto;
+		this.puntuacion = 0;
+		
+		TimerTask timerTask = new TimerTask() {
+			@Override
+			public void run() {
+				actualizarPuntuacion();
+			}		
+		};
+		this.timer = new Timer();
+		this.timer.scheduleAtFixedRate(timerTask, 0, 1000);
+		
 		posAbiertas = new HashMap<Integer, Integer>();
 		banderas = new HashMap<Integer, Integer>();
 		generarMinas(cantidad);
@@ -118,6 +133,8 @@ public class Partida extends Observable {
 	public void clickCasilla(int posicion) {
 		calcularCasillas(posicion);
 		if (posAbiertas.size() == getCantCasillas() - minas.size()) {
+			detenerTimer();
+			Main.escribiRanking();
 			setChanged();
 			notifyObservers(new DatosObserver(3, -1, null));
 		}
@@ -134,6 +151,7 @@ public class Partida extends Observable {
 					notifyObservers(new DatosObserver(0, k, null));
 				});
 				// Avisamos de que ha explotado la bomba
+				detenerTimer();
 				setChanged();
 				notifyObservers(new DatosObserver(2, -1, "BOOOOOM!!!"));
 			} else {
@@ -186,10 +204,28 @@ public class Partida extends Observable {
 			notifyObservers(new DatosObserver(4, posicion, "" + banderas.size()));
 		}
 	}
+	
+	private void actualizarPuntuacion() {
+		puntuacion++;
+		setChanged();
+		notifyObservers(new DatosObserver(6, -1, null));
+	}
+	
+	private void detenerTimer() {
+		timer.cancel();
+	}
+	
 	public int getDificultad() {
 		return dificultad;
 	}
 	public String getNombre() {
 		return nombre;
+	}
+
+	public int getPuntuacion() {
+		return puntuacion;
+	}
+	public void setPuntuacion(int puntuacion) {
+		this.puntuacion = puntuacion;
 	}
 }
