@@ -146,8 +146,6 @@ public class Main {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
-	    System.out.println(puntuaciones.toString());
 	    
 	    return puntuaciones;
 	}

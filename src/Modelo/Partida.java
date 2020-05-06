@@ -84,60 +84,8 @@ public class Partida extends Observable {
 		}
 	}
 
-	private int randInt(int min, int max) {
-		// Obtenemos un numero para poner las bombas
-		Random rand = new Random();
-		int randomNum = rand.nextInt((max - min) + 1) + min;
-		return randomNum;
-	}
-
-	public void imprimirMinas() {
-		List<Integer> m = new LinkedList<>();
-
-		minas.forEach((k, v) -> {
-			m.add(k);
-		});
-
-		javax.swing.JOptionPane.showMessageDialog(null, m.toString());
-	}
-
-	public int getAncho() {
-		return ancho;
-	}
-
-	public int getAlto() {
-		return alto;
-	}
-
-	public int getCantCasillas() {
-		return ancho * alto;
-	}
-
-	public int getCantMinas() {
-		return minas.size();
-	}
-	
-	public Map<Integer, Integer> getMinas(){
-		return minas;
-	}
-	
-	public Map<Integer, Integer> getBanderas(){
-		return banderas;
-	}
-	
-
 	private boolean esBomba(int posicion) {
 		return minas.containsKey(posicion);
-	}
-
-	public void clickCasilla(int posicion) {
-		calcularCasillas(posicion);
-		if (posAbiertas.size() == getCantCasillas() - minas.size()) {
-			detenerTimer();
-			Main.escribiRanking();
-			setChanged();
-			notifyObservers(new DatosObserver(3, -1, null));
-		}
 	}
 
 	private void calcularCasillas(int posicion) {
@@ -192,6 +140,16 @@ public class Partida extends Observable {
 			}
 		}
 	}
+	
+	public void clickCasilla(int posicion) {
+		calcularCasillas(posicion);
+		if (posAbiertas.size() == getCantCasillas() - minas.size()) {
+			detenerTimer();
+			Main.escribiRanking();
+			setChanged();
+			notifyObservers(new DatosObserver(3, -1, null));
+		}
+	}
 
 	public void clickBandera(int posicion) {
 		if (banderas.containsKey(posicion)) {
@@ -210,14 +168,52 @@ public class Partida extends Observable {
 		setChanged();
 		notifyObservers(new DatosObserver(6, -1, null));
 	}
+
+	private int randInt(int min, int max) {
+		// Obtenemos un numero para poner las bombas
+		Random rand = new Random();
+		int randomNum = rand.nextInt((max - min) + 1) + min;
+		return randomNum;
+	}
+
+	public void imprimirMinas() {
+		List<Integer> m = new LinkedList<>();
+
+		minas.forEach((k, v) -> {
+			m.add(k);
+		});
+
+		javax.swing.JOptionPane.showMessageDialog(null, m.toString());
+	}
 	
-	private void detenerTimer() {
-		timer.cancel();
+	public int getAncho() {
+		return ancho;
+	}
+
+	public int getAlto() {
+		return alto;
+	}
+
+	public int getCantCasillas() {
+		return ancho * alto;
+	}
+
+	public int getCantMinas() {
+		return minas.size();
+	}
+	
+	public Map<Integer, Integer> getMinas(){
+		return minas;
+	}
+	
+	public Map<Integer, Integer> getBanderas(){
+		return banderas;
 	}
 	
 	public int getDificultad() {
 		return dificultad;
 	}
+	
 	public String getNombre() {
 		return nombre;
 	}
@@ -225,7 +221,12 @@ public class Partida extends Observable {
 	public int getPuntuacion() {
 		return puntuacion;
 	}
+	
 	public void setPuntuacion(int puntuacion) {
 		this.puntuacion = puntuacion;
+	}
+	
+	private void detenerTimer() {
+		timer.cancel();
 	}
 }
