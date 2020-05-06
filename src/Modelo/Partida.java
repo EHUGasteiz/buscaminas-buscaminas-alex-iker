@@ -68,7 +68,7 @@ public class Partida extends Observable {
 		return mPartida;
 	}
 
-	public void generarMinas(int cantidad) {
+	private void generarMinas(int cantidad) {
 		minas = new HashMap<Integer, Integer>();
 
 		// Llenamos el mapa de posiciones de mina con numeros aleatorios no repetidos
@@ -175,16 +175,6 @@ public class Partida extends Observable {
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
 	}
-
-	public void imprimirMinas() {
-		List<Integer> m = new LinkedList<>();
-
-		minas.forEach((k, v) -> {
-			m.add(k);
-		});
-
-		javax.swing.JOptionPane.showMessageDialog(null, m.toString());
-	}
 	
 	public int getAncho() {
 		return ancho;
@@ -220,10 +210,6 @@ public class Partida extends Observable {
 
 	public int getPuntuacion() {
 		return puntuacion;
-	}
-	
-	public void setPuntuacion(int puntuacion) {
-		this.puntuacion = puntuacion;
 	}
 	
 	private void detenerTimer() {
