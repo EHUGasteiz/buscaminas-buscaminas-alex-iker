@@ -1,77 +1,29 @@
 package Vista;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import javax.swing.JPanel;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class VentanaInicioTest {
+	VentanaInicio vi;
 
+	
 	@BeforeEach
 	void setUp() throws Exception {
+		vi = new VentanaInicio();
 	}
 
 	@Test
 	void testVentanaInicio() {
-		
+		assertNotNull(new VentanaInicio());
 	}
 	
 	@Test
 	void testInitialize() {
-		
-	}
-	
-	@Test
-	void testGetPanel() {
-		
-	}
-	
-	@Test
-	void testGetBtnAceptar() {
-		
-	}
-	
-	@Test
-	void testGetPanel_1() {
-		
-	}
-	
-	@Test
-	void getLblNewLabel() {
-		
-	}
-	
-	@Test
-	void getTfNombre() {
-		
-	}
-	
-	@Test
-	void getLblNewLabel_1() {
-		
-	}
-	
-	@Test
-	void getRbDificultad1() {
-		
-	}
-	
-	@Test
-	void getRbDificultad2() {
-		
-	}
-	
-	@Test
-	void getRbDificultad3() {
-		
-	}
-	
-	@Test
-	void getPanel3() {
-		
-	}
-	
-	@Test
-	void getBtnPuntuacion() {
-		
+		assertNotNull(new VentanaInicio());
 	}
 
 }

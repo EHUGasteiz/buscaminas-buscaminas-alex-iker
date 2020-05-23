@@ -47,7 +47,7 @@ public class Main {
 	}
 
 	// Creamos ventana de inicio
-	private static void crearVentanaInicio() {
+	public static void crearVentanaInicio() {
 		vi = new VentanaInicio();
 		vi.setVisible(true);
 	}

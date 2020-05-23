@@ -152,7 +152,7 @@ public class VentanaBuscaminas extends JFrame implements Observer {
 		return btnReinicio;
 	}
 
-	private void crearTablero() {
+	public void crearTablero() {
 		panelCentral.removeAll();
 		if (Main.partida.getAlto() > 0) {
 			panelCentral.setLayout(new GridLayout(Main.partida.getAlto(), Main.partida.getAncho(), 0, 0));
