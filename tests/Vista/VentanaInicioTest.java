@@ -2,8 +2,6 @@ package Vista;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import javax.swing.JPanel;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
